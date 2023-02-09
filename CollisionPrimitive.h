@@ -28,6 +28,15 @@ public:
 
 	DirectX::XMVECTOR normal;
 
+	void ComputeNormal();
+};
+
+struct Ray
+{
+	DirectX::XMVECTOR start = { 0,0,0,1 };
+
+	DirectX::XMVECTOR dir = { 1,0,0,0 };
+
 };
 
 class CollisionPrimitive
