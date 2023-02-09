@@ -3,19 +3,25 @@
 #include <Windows.h>
 #include <wrl.h>
 
-#define DIRECTINPUT_VERSION     0x0800          // DirectInputのバージョン指定
+#define DIRECTINPUT_VERSION 0x0800 // DirectInputのバージョン指定
 #include <dinput.h>
 
 /// <summary>
 /// 入力
 /// </summary>
-class Input
-{
-private: // エイリアス
+class Input {
+  private: // エイリアス
 	// Microsoft::WRL::を省略
-	template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-public: // メンバ関数
+  public:
+	struct MouseMove {
+		LONG lX;
+		LONG lY;
+		LONG lZ;
+	};
+
+  public: // メンバ関数
 	/// <summary>
 	/// 初期化
 	/// </summary>
@@ -40,10 +46,42 @@ public: // メンバ関数
 	/// <returns>トリガーか</returns>
 	bool TriggerKey(BYTE keyNumber);
 
-private: // メンバ変数
+	/// <summary>
+	/// キーの左ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
+	bool PushMouseLeft();
+
+	/// <summary>
+	/// キーの中ボタン押下をチェック
+	/// </summary>
+	/// <returns>押されているか</returns>
+	bool PushMouseMiddle();
+
+	/// <summary>
+	/// キーの左ボタントリガーをチェック
+	/// </summary>
+	/// <returns>トリガーか</returns>
+	bool TriggerMouseLeft();
+
+	/// <summary>
+	/// キーの中ボタントリガーをチェック
+	/// </summary>
+	/// <returns>トリガーか</returns>
+	bool TriggerMouseMiddle();
+
+	/// <summary>
+	/// マウス移動量を取得
+	/// </summary>
+	/// <returns>マウス移動量</returns>
+	MouseMove GetMouseMove();
+
+  private: // メンバ変数
 	ComPtr<IDirectInput8> dinput;
 	ComPtr<IDirectInputDevice8> devkeyboard;
 	BYTE key[256] = {};
 	BYTE keyPre[256] = {};
+	ComPtr<IDirectInputDevice8> devMouse;
+	DIMOUSESTATE2 mouseState = {};
+	DIMOUSESTATE2 mouseStatePre = {};
 };
-
